@@ -1,23 +1,24 @@
 // consultar uma cidade pelo nome na api e verificar sua temperatura, tema do exercicio
+let campoCidade = document.querySelector("#cidade");
 
-function acao (evento){
-    let entrada= document.querySelector("#cidade").value;
+campoCidade.addEventListener("keydown", async function () {
 
-    if (evento.key=="Enter"){
-        cidade = pegarCidade(entrada);
-        console.log(entrada);
+    if(evento.key === "Enter"){
+        let entrada = campoCidade.value;
+        let cidade = await pegarCidade(entrada);
+        console.log(cidade)
     }
-    return(cidade)
-}
+})
+
 
 async function pegarCidade(nome){
-    let nomecidade = await fetch(
+    let dadoscidade = await fetch(
         `https://brasilapi.com.br/api/cptec/v1/cidade/${nome}`
     ); 
     if (nomecidade.ok){
         console.log("deu certo");
-        console.log(nomecidade.value)
-        return(nomecidade);
+        console.log(dadoscidade.value)
+        return(dadoscidade);
     }
     else{
         console.log("deu red");
