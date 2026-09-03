@@ -1,30 +1,51 @@
-// consultar uma cidade pelo nome na api e verificar sua temperatura, tema do exercicio
+// consultar uma cidade pelo nome na api e verificar sua temperatura, tema do exercicio https://brasilapi.com.br/api/cptec/v1/cidade/${}
 let campoCidade = document.querySelector("#cidade");
+let elemntoMensagem = document.querySelector("#mensagem");
+let elementoCidades = document.querySelector("#cidade");
+let elementoPrevisao = document.querySelector("#previsao")
 
-async function pegarCidade(event){
-    if(event.key==="Enter"){
+campoCidade.addEventListener("Keydown", function(evento){
+    if(evento.code==="Enter"){
 
-        // buscando na api as informações da cidade escrita dentro do imput
-        let cidade = await fetch(
-            `https://brasilapi.com.br/api/cptec/v1/cidade/${campoCidade.value}`
-        );
-           
-        //tranforma os dados obtidos da api em um array e pega só o valor do id para inserir na requisição da api de tempo
-        let dadosCidade =  await cidade.json();
-        let id = dadosCidade.map(dadosCidade => dadosCidade.id);
+    };
+})
 
-        //atraves da api com o id pega as informações sobre o tempo na cidade solicitada 
-        let tempo = await fetch(
-            `https://brasilapi.com.br/api/cptec/v1/clima/previsao/${id}`
-        );
+async function buscarCidades(){
+    let nome = campoCidade.value;
+    //buscando resposta da api
+    let resposta= await fetch(`https://brasilapi.com.br/api/cptec/v1/cidade/${nome}`);
+    //enquanto a api n retorna aparece que esta bucando 
+    elemntoMensagem.textContent="busacando..."
+    let dados = await resposta.json();
+    if(resposta.ok ){
+        //percorre a lista de cidades que a api retornou 
+        for(let i = 0; i<dados.length; i++){
+            //faz a impressao dos dados no corpo do site
+            let elemntoCidade = document.createElement("p");
+            elemntoCidade.textContent=`${dados[i].nome} - ${dados[i].estado}`
+            elemntoCidade.classList.add("cidade")
+            elemntoCidade.addEventListener("click", function(){
+                buscarPrevisao(dados[i].id)
+            })
+            elementoCidades.appendChild(elemntoCidade)
+        }
+        elemntoMensagem.textContent= "";
+    }
+    else{     
+        // quando aparecer o codigo 404 aparece que nem uma cidade foi encontrada   
+        elemntoMensagem.textContent= dados.menssage;
+        console.log("Not Found")
+    }
+}
 
-        let dadosTempo = await tempo.json();
-        let clima = dadosTempo.clima[0];
+async function buscarPrevisao(id){
+    let resposta= await fetch(`https://brasilapi.com.br/api/cptec/v1/clima/previsao/${id}`);
 
-        console.log(dadosCidade[0]);
-        console.log(id);
-        console.log(dadosTempo)
-        console.log(clima)
-    }   
+    let dados =await resposta.json()
 
+    if (resposta.ok){
+
+    }else{
+        elemntoMensagem.textContent = dados.menssage
+    }
 }
