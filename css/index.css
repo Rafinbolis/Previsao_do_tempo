@@ -37,3 +37,8 @@ main{
 .cidade:hover{
     background-color: #e0e0e0;
 }
+
+.dia{
+    padding: 0.625rem;
+    border: 1px solid #424242;
+}
